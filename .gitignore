@@ -1,0 +1,24 @@
+##########################################################################
+##   .gitignore file for files and directories at the top of the repo   ##
+##########################################################################
+
+## vim .swp files
+*.swp
+*.swo
+
+## Gedit/Nedit temporary files
+*~
+
+## log files
+*.log
+log*
+
+## temporary directory (optional)
+tmp/*
+temp/*
+
+## test directory content
+test/*
+
+## add here further directives if required ...
+desktop.ini
