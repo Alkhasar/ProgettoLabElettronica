@@ -30,14 +30,14 @@
 log_wave -r /*
 
 ## create new Wave window (default name is "Untitled 1" otherwise)
-#create_wave_config "Waveforms"
+create_wave_config "Waveforms"
 
-create_wave_config "Testbench waveforms"
+#create_wave_config "Testbench waveforms"
 #create_wave_config "DUT waveforms"
 
 ## probe all top-level signals (testbench signals)
 add_wave [current_scope]/* -into [lindex [get_wave_config] 0]
-#add_wave /glbl/GSR -into [lindex [get_wave_config] 0]
+add_wave /glbl/GSR -into [lindex [get_wave_config] 0]
 
 ## probe also all DUT signals into additional Wave window
 #add_wave [current_scope]/DUT/* -into  [lindex [get_wave_config] 1]

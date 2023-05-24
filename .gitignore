@@ -20,5 +20,8 @@ temp/*
 ## test directory content
 test/*
 
+## Work dir
+work/*
+
 ## add here further directives if required ...
 desktop.ini

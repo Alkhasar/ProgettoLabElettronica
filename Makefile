@@ -74,10 +74,10 @@ LOG_DIR  := log
 ##########################################
 
 ## specify top-level RTL (this is used for implementation and firmware installation)
-RTL_TOP_MODULE := CounterBCD_4digit_display
+RTL_TOP_MODULE := Top
 
 ## specify top-level testbench module (this is the target module for the xelab executable)
-SIM_TOP_MODULE := tb_CounterBCD_4digit_display
+SIM_TOP_MODULE := tb_Top
 
 ##
 ## **NOTE
@@ -91,10 +91,8 @@ SIM_TOP_MODULE := tb_CounterBCD_4digit_display
 ##
 ## specify RTL sources by hand (more in general can be Verilog + VHDL code)
 ##
-
-RTL_VLOG_SOURCES := $(RTL_DIR)/TickCounter.v $(RTL_DIR)/Debouncer.v $(RTL_DIR)/CounterBCD.v $(RTL_DIR)/CounterBCD_Ndigit.v $(RTL_DIR)/SevenSegmentDecoder.v $(RTL_DIR)/CounterBCD_4digit_display.v
-SIM_VLOG_SOURCES := $(SIM_DIR)/glbl.v $(SIM_DIR)/ClockGen.v $(SIM_DIR)/tb_CounterBCD_4digit_display.v
-
+RTL_VLOG_SOURCES := $(RTL_DIR)/Top.v $(RTL_DIR)/Ticker.v
+SIM_VLOG_SOURCES := $(SIM_DIR)/tb_Top.v $(SIM_DIR)/tb_SimulationClockGenerator.v $(SIM_DIR)/glbl.v
 
 ## if no VHDL sources, you can either comment the below variables or just leave them empty
 #RTL_VHDL_SOURCES :=
@@ -105,31 +103,29 @@ SIM_VLOG_SOURCES := $(SIM_DIR)/glbl.v $(SIM_DIR)/ClockGen.v $(SIM_DIR)/tb_Counte
 ## or automatically find all *.(s)v and *.vhd source files
 ##
 
-#
-#ifneq ($(wildcard $(RTL_DIR)/*.v ),)
+# ifneq ($(wildcard $(RTL_DIR)/*.v ),)
 #   RTL_VLOG_SOURCES += $(wildcard $(RTL_DIR)/*.v )
-#endif
-#
-#ifneq ($(wildcard $(RTL_DIR)/*.sv ),)
+# endif
+
+# ifneq ($(wildcard $(RTL_DIR)/*.sv ),)
 #   RTL_VLOG_SOURCES += $(wildcard $(RTL_DIR)/*.sv )
-#endif
-#
-#ifneq ($(wildcard $(RTL_DIR)/*.vhd ),)
+# endif
+
+# ifneq ($(wildcard $(RTL_DIR)/*.vhd ),)
 #   RTL_VHDL_SOURCES += $(wildcard $(RTL_DIR)/*.vhd )
-#endif
-#
-#ifneq ($(wildcard $(SIM_DIR)/*.v ),)
+# endif
+
+# ifneq ($(wildcard $(SIM_DIR)/*.v ),)
 #   SIM_VLOG_SOURCES += $(wildcard $(SIM_DIR)/*.v )
-#endif
-#
-#ifneq ($(wildcard $(SIM_DIR)/*.sv ),)
+# endif
+
+# ifneq ($(wildcard $(SIM_DIR)/*.sv ),)
 #   SIM_VLOG_SOURCES += $(wildcard $(SIM_DIR)/*.sv )
-#endif
-#
-#ifneq ($(wildcard $(SIM_DIR)/*.vhd ),)
+# endif
+
+# ifneq ($(wildcard $(SIM_DIR)/*.vhd ),)
 #   SIM_VHDL_SOURCES += $(wildcard $(SIM_DIR)/*.vhd )
-#endif
-#
+# endif
 
 
 ## group together all Verilog/SystemVerilog and VHDL sources
