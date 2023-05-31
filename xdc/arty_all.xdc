@@ -21,9 +21,9 @@
 ##   electrical constraints   ##
 ################################
 
-## voltage configurations
-set_property CFGBVS VCCO        [current_design]
-set_property CONFIG_VOLTAGE 3.3 [current_design]
+# ## voltage configurations
+# set_property CFGBVS VCCO        [current_design]
+# set_property CONFIG_VOLTAGE 3.3 [current_design]
 
 
 #######################################
@@ -330,7 +330,7 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 ## memory in order to automatically load the FPGA configuration at power-up
 ##
 
-set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4  [current_design]
-set_property CONFIG_MODE SPIx4  [current_design]
+# set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4  [current_design]
+# set_property CONFIG_MODE SPIx4  [current_design]
 
 

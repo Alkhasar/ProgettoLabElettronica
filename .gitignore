@@ -23,5 +23,15 @@ test/*
 ## Work dir
 work/*
 
+## Ignore PRJ folder
+vivado_prj/*
+.Xil/*
+bench/unused
+rtl/unused
+tmp
+test
+
+
+
 ## add here further directives if required ...
 desktop.ini

@@ -1,36 +1,52 @@
-/**
-* Test bench module for top.v
-*/
+// Real setup testbench
 
 `timescale 10ns / 1ns
 
-module tb_Top();
-
-    // Main reset
-    reg rst = 1'b1;
-
+module tb_top();
     /**
     * SIMULATION CLOCK GENERATOR
     **/
-    reg fpga_clk;
-    tb_SimulationClockGenerator #(.PERIOD(10.0)) ClkGen (.clk(fpga_clk));
+    wire fpga_clk;
+    tb_sim_clk #(.PERIOD(10.0)) ClkGen (.clk(fpga_clk));
 
+    // Main reset
+    reg rst = 1'b1;
+    
     /**
-    * TB_TICKER
+    * TOP_MODULE INSTANCE
     **/
-    reg tick;
-    Ticker ticker_DUT (.clk(fpga_clk), .rst(rst), .tick(tick));
+    reg [7:0] DB = 8'd0;
+    reg INT = 1'd0;
+    wire WR;
 
-    Top MAIN (.clk(fpga_clk), .rst(rst));
+    top TOP (
+        // Main signals
+        .clk(fpga_clk),
+        .rst(rst),
 
+        // ADC Signals
+        .INT(INT),
+        .DB(DB),
+        .WR(WR)
+    );
+    
     initial begin
-        #0 rst = 1b'1;
-        #100 rst = 1'b0;
-        #300 rst = 1'b1;
-        #400 rst = 1'b0;
-        #999 rst = 1'b1;
-        #1000 rst = 1'b0;
-        #5000 $finish;
+        // Keeping everything resetted (SAME as GSR)
+        #10 rst = 1'b0;         // After 100ns
+
+        // Stop simulation
+        #1000 $finish;
     end
+
+    always @(posedge TOP.tick) begin
+        // Conversion stimulus
+        #100 INT = 1'b1;  
+        #100 INT = 1'b0;
+
+        // Assiging a value o data bus
+        #1 DB = {$random} %255;
+        #20 DB = 8'd0;
+    end 
+
 
 endmodule

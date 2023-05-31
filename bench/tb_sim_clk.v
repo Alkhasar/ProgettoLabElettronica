@@ -4,9 +4,9 @@
 * PERIOD (param real): clock period in nanoseconds
 */
 
-`timescale 10ns / 1ns
+`timescale 1ns / 1ns
 
-module tb_SimulationClockGenerator #(parameter real PERIOD = 10.0) (
+module tb_sim_clk #(parameter real PERIOD = 10.0) (
     output reg clk
 );
     initial begin
