@@ -7,7 +7,7 @@
 *
 *   count (reg out) : Current count
 **/
-`timescale 10ns / 1ns
+`timescale 10 ns / 1 ns
 
 module counter  #(parameter integer N_BITS = 4) (
     // Inputs

@@ -11,7 +11,7 @@
 *
 */
 
-`timescale 10ns / 1ns
+`timescale 10 ns / 1 ns
 
 module ticker #(parameter integer N_TICKS = 100) (
     // Inputs

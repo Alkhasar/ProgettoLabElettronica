@@ -4,7 +4,7 @@
 * PERIOD (param real): clock period in nanoseconds
 */
 
-`timescale 1ns / 1ns
+`timescale 1 ns / 1 ns
 
 module tb_sim_clk #(parameter real PERIOD = 10.0) (
     output reg clk

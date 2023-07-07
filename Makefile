@@ -91,7 +91,7 @@ SIM_TOP_MODULE := tb_top
 ##
 ## specify RTL sources by hand (more in general can be Verilog + VHDL code)
 ##
-RTL_VLOG_SOURCES := $(RTL_DIR)/counter.v $(RTL_DIR)/ticker.v $(RTL_DIR)/adc_driver.v $(RTL_DIR)/top.v
+RTL_VLOG_SOURCES := $(RTL_DIR)/counter.v $(RTL_DIR)/ticker.v $(RTL_DIR)/adc_driver.v $(RTL_DIR)/top.v $(RTL_DIR)/posedge_detector.v
 SIM_VLOG_SOURCES := $(SIM_DIR)/glbl.v $(SIM_DIR)/tb_sim_clk.v $(SIM_DIR)/tb_top.v
 
 ## if no VHDL sources, you can either comment the below variables or just leave them empty

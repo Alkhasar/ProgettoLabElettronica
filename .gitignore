@@ -30,6 +30,7 @@ bench/unused
 rtl/unused
 tmp
 test
+cores
 
 
 
