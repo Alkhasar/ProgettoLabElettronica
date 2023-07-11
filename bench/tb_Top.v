@@ -16,17 +16,18 @@ module tb_top();
     * TOP_MODULE INSTANCE
     **/
     reg S_DATA = 1'b0;
-    reg start_switch = 1'b0;
+    reg en = 1'b0;
     wire S_CLK, CONV_ST;
 
     // Debug wires
-    wire adc_busy, adc_ready, adc_data;
+    wire adc_busy, adc_ready, TxD, tx_busy;
+    // wire [15:0] deser_out;
 
     top TOP (
         // Main signals
         .fpga_clk(fpga_clk),
         .button_rst(rst),
-        .start_switch(start_switch),
+        .en(en),
 
         // ADC Signals
         .S_DATA(S_DATA),
@@ -36,7 +37,12 @@ module tb_top();
         // Test signals
         .adc_busy(adc_busy),
         .adc_ready(adc_ready),
-        .adc_data(adc_data)
+
+        .deser_out(deser_out),
+
+        // UART
+        .TxD(TxD),
+        .tx_busy(tx_busy)
     );
     
     initial begin
@@ -44,7 +50,7 @@ module tb_top();
         #10 rst = 1'b0;         // After 100ns
 
         // Start Button
-        #50 start_switch = 1'b1;
+        #11 en = 1'b1;
 
         // Stop simulation
         #50000 $finish;
@@ -54,7 +60,6 @@ module tb_top();
     always @(posedge TOP.S_CLK) begin
         // Assiging a value to data bus
         #1 S_DATA = {$random} % 2;
-
     end 
 
 endmodule

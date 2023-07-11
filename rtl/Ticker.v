@@ -7,7 +7,7 @@
 * rst  (wire in): Sync reset high
 * en   (wire in): Enable
 *
-* tick (wire out): A single puls
+* tick (wire out): A single pulse
 *
 */
 

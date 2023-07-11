@@ -18,6 +18,15 @@
 ##
 
 
+# Command for functional sim
+# xvlog work/build/outputs/mapped.v
+# xvlog bench/tb_top.v
+# xvlog bench/glbl.v
+# xvlog bench/tb_sim_clk.v
+# xelab -debug typical -L secureip -L unisims_ver tb_top glbl tb_sim_clk -s mapped
+# xsim mapped -gui
+
+
 #######################################
 ##   preamble (reserved variables)   ##
 #######################################
@@ -91,7 +100,7 @@ SIM_TOP_MODULE := tb_top
 ##
 ## specify RTL sources by hand (more in general can be Verilog + VHDL code)
 ##
-RTL_VLOG_SOURCES := $(RTL_DIR)/counter.v $(RTL_DIR)/ticker.v $(RTL_DIR)/adc_driver.v $(RTL_DIR)/top.v $(RTL_DIR)/posedge_detector.v
+RTL_VLOG_SOURCES := $(RTL_DIR)/counter.v $(RTL_DIR)/ticker.v $(RTL_DIR)/adc_driver.v $(RTL_DIR)/top.v $(RTL_DIR)/sipo.v $(RTL_DIR)/uart_tx.v $(RTL_DIR)/single_delay.v
 SIM_VLOG_SOURCES := $(SIM_DIR)/glbl.v $(SIM_DIR)/tb_sim_clk.v $(SIM_DIR)/tb_top.v
 
 ## if no VHDL sources, you can either comment the below variables or just leave them empty
@@ -635,3 +644,11 @@ clean_all : clean_log clean_sim clean_build ## Delete ALL temporary and garbage 
 clean : clean_all ## Alias, same as 'make clean_all'
 ##____________________________________________________________________________________________________
 
+.PHONY : post_sim
+post_sim: 
+	xvlog work/build/outputs/mapped.v
+	xvlog bench/tb_top.v
+	xvlog bench/glbl.v
+	xvlog bench/tb_sim_clk.v
+	xelab -debug typical -L secureip -L unisims_ver tb_top glbl tb_sim_clk -s mapped
+	xsim mapped -gui

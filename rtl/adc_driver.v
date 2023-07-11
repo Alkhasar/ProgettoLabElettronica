@@ -1,10 +1,7 @@
 /**
 * ADC driver implementation uing a Moore State Machine with 3 always loop
 * - Output changes 1 clk pulse later
-* - Current output depends only on current state
-*
-* PERSONAL CHANGES:
-* - To comply with vivado design suggestions, sync reset active high
+* - To make everything more clear, I've been as explicit as possible in the code. A lot of code could have been condensed in easier structures
 *
 * ┌──────────────────────────────────────────────────────────────────────────┐
 * │                                         OUTPUT LOGIC & REGISTERS         │
@@ -13,12 +10,12 @@
 * │                                   │      COMB           SEQU         │   │
 * │                                   │      LOGIC          LOGIC        │   │
 * │                                   │    ┌───────┐       ┌───────┐     │   │
-* │                                   │    │       │       │       │  WR │   │
-* │                                   │    │       │       │       ├─────┼──►│
-* │                           3b NEXT │    │       │       │       │ BUSY│   │
+* │                                   │    │       │       │       │     │   │
+* │                                   │    │       │       │       │     │   │
+* │                           3b NEXT │    │       │       │       │     │   │
 * │                          ┌────────┼───►│  OUT  ├──────►│  OUT  ├─────┼──►│
-* │                          │        │    │ LOGIC │       │  F/F  │ DATA│   │
-* │                          │        │    │       │    ┌─►│►      ├─────┼──►│
+* │                          │        │    │ LOGIC │       │  F/F  │     │   │
+* │                          │        │    │       │    ┌─►│►      │     │   │
 * │                          │        │    └───────┘    │  └───────┘     │   │
 * │                          │        │                 │                │   │
 * │  NEXT STATE              │        └─────────────────┼────────────────┘   │
@@ -27,7 +24,7 @@
 * │              ┌───────┐   │  ┌───────┐               │                    │
 * │  ADC INPUTS  │       │   │  │       │ CLKED PRESENT │                    │
 * │  ───────────►│       │   │  │       │ STATE LOGIC   │                    │
-* │  COUNTER 11b │ NEXT  │   │  │PRESENT│               │                    │
+* │  COUNTER 12b │ NEXT  │   │  │PRESENT│               │                    │
 * │  ───────────►│ STATE ├───┴─►│ STATE ├──┐            │                    │
 * │              │ LOGIC │      │  F/F  │  │            │                    │
 * │         ┌───►│       │   ┌─►│►      │  │ 3b STATE   │                    │
@@ -42,6 +39,7 @@
 *   clk         (wire in)   : Main fpga clk
 *   acquire     (wire in)   : Signal to start a conversion
 *   rst         (wire in)   : Sync reset active high
+*   serial_clk  (wire in)   : Ticks to extract the adc data
 *
 *   busy        (reg out)   : Conversion ongoing flag
 *   ready       (reg out)   : Data ready flag
@@ -72,9 +70,9 @@ module adc_driver(
     output reg data,
  
     // Chip PINS
-    input wire S_DATA,                      // Data Bus
-    output reg S_CLK,                      // Interrupt
-    output reg CONV_ST                      // Write
+    input wire S_DATA,
+    output reg S_CLK,
+    output reg CONV_ST
 
 );
     // ADC driver SCLK enable
@@ -129,9 +127,9 @@ module adc_driver(
                                     else                        next = WAIT_CONV;
             READ_DATA           :   if(read_data == 4'd10)      next = WAIT_RESET;
                                     else                        next = READ_DATA;
-            WAIT_RESET          :   if(passed_time == 12'd4)    next = IDLE;
+            WAIT_RESET          :   if(passed_time == 12'd1)    next = IDLE;// RENAME EOC
                                     else                        next = WAIT_RESET;
-            default             :   next = IDLE ; // May be removed
+            default             :   next = IDLE ; // May be removed, but latches inferred 
         endcase
     end
 
@@ -157,12 +155,12 @@ module adc_driver(
 
             // Data counter regs
             data_counter_reset  <= 1'b1;
-            data_counter_enable <= 1'b0;
+            data_counter_enable <= 1'b0 ;
         end
         else begin
             case(next)
                 INIT            :   begin
-                                        // ADC Outputs
+                                        // A    DC Outputs
                                         S_CLK_EN        <= 1'b0;
                                         CONV_ST         <= 1'b0;
 
@@ -199,7 +197,7 @@ module adc_driver(
 
                 IDLE            :   begin
                                         // ADC Outputs
-                                        S_CLK_EN           <= 1'b0;
+                                        S_CLK_EN        <= 1'b0;
                                         CONV_ST         <= 1'b1;
 
                                         // Internal Outputs
@@ -276,7 +274,7 @@ module adc_driver(
 
                                         // Internal Outputs
                                         busy            <= 1'b1;
-                                        ready           <= 1'b1;
+                                        ready           <= 1'b0;
     
                                         // Counter regs             
                                         counter_reset   <= 1'b1;
@@ -289,12 +287,12 @@ module adc_driver(
 
                 WAIT_RESET       :   begin
                                         // ADC Outputs
-                                        S_CLK_EN        <= 1'b0;
+                                        S_CLK_EN        <= 1'b1;
                                         CONV_ST         <= 1'b1;
 
                                         // Internal Outputs
-                                        busy            <= 1'b1;
-                                        ready           <= 1'b0;
+                                        busy            <= 1'b0;
+                                        ready           <= 1'b1;
 
                                         // Counter regs             
                                         counter_reset   <= 1'b0;
